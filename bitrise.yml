@@ -2805,6 +2805,7 @@ app:
 meta:
   bitrise.io:
     machine_type: performance
+    stack: osx-xcode-11.6.x 
 trigger_map:
 - push_branch: main
   workflow: RunUnitTests
