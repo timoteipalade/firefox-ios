@@ -313,7 +313,11 @@ class Tab: NSObject {
             do {
                 abp = try ABPWebViewBlocker(host: self)
                 abp.useContentBlocking(completion: { err in
-                    print("ABPKIT: \(String(describing: err))")
+                    if let err = err {
+                        print("ABPKIT: \(String(describing: err))")
+                    } else {
+                        print("ABPKIT: Running!")
+                    }
                 })
             }
             catch let err {
