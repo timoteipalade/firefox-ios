@@ -312,11 +312,13 @@ class Tab: NSObject {
             
             do {
                 abp = try ABPWebViewBlocker(host: self)
-                abp.useContentBlocking(completion: { err in
+                abp.useContentBlocking(completion: { [weak self] err in
                     if let err = err {
                         print("ABPKIT: \(String(describing: err))")
                     } else {
                         print("ABPKIT: Running!")
+                        let AAinUse = try? self?.abp.lastUser().acceptableAdsInUse() ?? false
+                        print("ABPKIT: \(AAinUse == true ? "AA in Use" : "AA not in use")")
                     }
                 })
             }
