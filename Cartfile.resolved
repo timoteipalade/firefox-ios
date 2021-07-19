@@ -1,5 +1,5 @@
 git "https://eyeo@gitlab.com/eyeo/adblockplus/ios-libraries/RxSwift/" "6.2.0"
-git "https://gitlab.com/eyeo/adblockplus/abpkit" "6a720fbb82338dd58ae522af5941f477a98c4012"
+git "https://gitlab.com/eyeo/adblockplus/abpkit" "877c90223136624a99754fc34944093e949e516e"
 github "DaveWoodCom/XCGLogger" "7.0.1"
 github "Dev1an/A-Star" "3.0.0-beta-1"
 github "SDWebImage/SDWebImage" "5.11.1"
