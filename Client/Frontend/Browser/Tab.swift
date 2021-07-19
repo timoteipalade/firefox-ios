@@ -8,6 +8,7 @@ import Storage
 import Shared
 import SwiftyJSON
 import XCGLogger
+import ABPKit
 
 fileprivate var debugTabCount = 0
 
@@ -282,6 +283,13 @@ class Tab: NSObject {
             configuration.allowsInlineMediaPlayback = true
             let webView = TabWebView(frame: .zero, configuration: configuration)
             webView.delegate = self
+
+            do {
+                webView.abp = try ABPWebViewBlocker(host: webView)
+            }
+            catch let err {
+                print("ABPKIT: Issue setting up the ABPWebViewBlocker. \(err)")
+            }
 
             webView.accessibilityLabel = .WebViewAccessibilityLabel
             webView.allowsBackForwardNavigationGestures = true
@@ -799,5 +807,35 @@ extension URL {
         components.host = host
 
         return components.url ?? self
+    }
+}
+
+extension WKWebView {
+    private struct AssociatedKeys {
+        static var blocker = "blocker"
+    }
+    
+    public var abp : ABPWebViewBlocker! {
+        get {
+            objc_getAssociatedObject(self, &AssociatedKeys.blocker) as? ABPWebViewBlocker
+        }
+
+        set(value) {
+            objc_setAssociatedObject(self,
+                                     &AssociatedKeys.blocker,
+                                     value,
+                                     objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+}
+
+extension WKWebView: ABPBlockable {
+    public var webView: WKWebView! {
+        get {
+            return self
+        }
+        set(value) {
+            //nothing
+        }
     }
 }

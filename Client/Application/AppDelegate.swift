@@ -16,6 +16,7 @@ import Sync
 import CoreSpotlight
 import UserNotifications
 import Account
+import ABPKit
 
 #if canImport(BackgroundTasks)
  import BackgroundTasks
@@ -285,6 +286,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIViewControllerRestorati
             }
         }
         updateSessionCount()
+
+        do {
+            try User().save()
+        } catch let err {
+            print("ABPKit: Error setting up user: \(err)")
+        }
 
         return shouldPerformAdditionalDelegateHandling
     }
