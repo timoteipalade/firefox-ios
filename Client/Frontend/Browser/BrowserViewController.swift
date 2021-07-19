@@ -1445,11 +1445,11 @@ extension BrowserViewController: TabDelegate {
 
         tab.addContentScript(LocalRequestHelper(), name: LocalRequestHelper.name())
 
-        let blocker = FirefoxTabContentBlocker(tab: tab, prefs: profile.prefs)
-        tab.contentBlocker = blocker
-        tab.addContentScript(blocker, name: FirefoxTabContentBlocker.name())
-
-        tab.addContentScript(FocusHelper(tab: tab), name: FocusHelper.name())
+//        let blocker = FirefoxTabContentBlocker(tab: tab, prefs: profile.prefs)
+//        tab.contentBlocker = blocker
+//        tab.addContentScript(blocker, name: FirefoxTabContentBlocker.name())
+//
+//        tab.addContentScript(FocusHelper(tab: tab), name: FocusHelper.name())
     }
 
     func tab(_ tab: Tab, willDeleteWebView webView: WKWebView) {
