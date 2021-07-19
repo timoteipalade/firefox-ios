@@ -227,6 +227,8 @@ class Tab: NSObject {
     fileprivate var alertQueue = [JSAlertInfo]()
 
     weak var browserViewController: BrowserViewController?
+    
+    var abp: ABPWebViewBlocker!
 
     init(bvc: BrowserViewController, configuration: WKWebViewConfiguration, isPrivate: Bool = false) {
         self.configuration = configuration
@@ -284,13 +286,6 @@ class Tab: NSObject {
             let webView = TabWebView(frame: .zero, configuration: configuration)
             webView.delegate = self
 
-            do {
-                webView.abp = try ABPWebViewBlocker(host: webView)
-            }
-            catch let err {
-                print("ABPKIT: Issue setting up the ABPWebViewBlocker. \(err)")
-            }
-
             webView.accessibilityLabel = .WebViewAccessibilityLabel
             webView.allowsBackForwardNavigationGestures = true
 
@@ -314,6 +309,16 @@ class Tab: NSObject {
             self.webView?.addObserver(self, forKeyPath: KVOConstants.URL.rawValue, options: .new, context: nil)
             UserScriptManager.shared.injectUserScriptsIntoTab(self, nightMode: nightMode, noImageMode: noImageMode)
             tabDelegate?.tab?(self, didCreateWebView: webView)
+            
+            do {
+                abp = try ABPWebViewBlocker(host: self)
+                abp.useContentBlocking(completion: { err in
+                    print("ABPKIT: \(String(describing: err))")
+                })
+            }
+            catch let err {
+                print("ABPKIT: Issue setting up the ABPWebViewBlocker. \(err)")
+            }
         }
     }
 
@@ -810,32 +815,4 @@ extension URL {
     }
 }
 
-extension WKWebView {
-    private struct AssociatedKeys {
-        static var blocker = "blocker"
-    }
-    
-    public var abp : ABPWebViewBlocker! {
-        get {
-            objc_getAssociatedObject(self, &AssociatedKeys.blocker) as? ABPWebViewBlocker
-        }
-
-        set(value) {
-            objc_setAssociatedObject(self,
-                                     &AssociatedKeys.blocker,
-                                     value,
-                                     objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-    }
-}
-
-extension WKWebView: ABPBlockable {
-    public var webView: WKWebView! {
-        get {
-            return self
-        }
-        set(value) {
-            //nothing
-        }
-    }
-}
+extension Tab: ABPBlockable {}
