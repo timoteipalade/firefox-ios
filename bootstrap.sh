@@ -43,8 +43,11 @@ if [ "$1" == "--importLocales" ]; then
   exit 0
 fi
 
-# Run carthage
-./carthage_command.sh
+# # Run carthage
+# ./carthage_command.sh
+# Run our workaround insteas to install abpkit
+echo "About to run our workaround"
+sh xcode12_carthage_update_workaround.sh
 
 # Move Glean script to source folder from MozillaAppServices.framework
 # as we don't want to ship our app with this Glean script inside framework
